@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Socket.IO Chat</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js"></script>
+  </head>
+  <body>
+    <!-- this is HTML element messages-->
+    <ul id="messages">
+      <!-- 
+        <li>xxxx</li>
+
+       -->
+
+    </ul>
+    <form id="form" action="">
+      <input id="input" autocomplete="off" /><button>Send</button>
+    </form>
+
+    <script>
+      const socket = io("http://localhost:3000");
+
+      // https://socket.io/docs/v4/tutorial/step-4
+      //Task: When the server emits event name 'chat message' ,
+      // show message in  'messages' HTML Element
+      socket.on("chat message", (content)=>{
+        const messages = document.getElementById("messages");
+
+        // Method1
+        var node = document.createElement("li");
+        node.textContent = content;
+        messages.appendChild(node);
+
+        // OR Method2
+        //messages.innerHTML += `<li>${content}</li>`
+      });
+
+      // https://socket.io/docs/v4/tutorial/step-5
+      //Task: Send a message using the 'input' HTML Element
+      const form = document.getElementById("form");
+      const input = document.getElementById("input");
+
+      form.addEventListener("submit", (e)=> {
+        e.preventDefault();
+        if (input.value) {
+          socket.emit("chat message", input.value);
+          input.vlaue = "";
+        }
+      });
+    </script>
+  </body>
+</html>
